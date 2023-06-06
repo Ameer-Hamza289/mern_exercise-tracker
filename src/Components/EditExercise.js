@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { useParams } from 'react-router-dom';
 
-const EditExercise = (props) => {
+
+const EditExercise = () => {
+  const { id } = useParams();
+  console.log(id+"This is ///");
   const [username, setUsername] = useState('');
   const [description, setDescription] = useState('');
   const [duration, setDuration] = useState(0);
@@ -13,7 +17,7 @@ const EditExercise = (props) => {
   const userInputRef = useRef(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/exercises/' + props.match.params.id)
+    axios.get('http://localhost:5000/exercises/' +id)
       .then(response => {
         setUsername(response.data.username);
         setDescription(response.data.description);
@@ -35,7 +39,7 @@ const EditExercise = (props) => {
       })
 
     userInputRef.current.focus();
-  }, [props.match.params.id]);
+  }, [id]);
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -65,7 +69,7 @@ const EditExercise = (props) => {
 
     console.log(exercise);
 
-    axios.post('http://localhost:5000/exercises/update/' + props.match.params.id, exercise)
+    axios.post('http://localhost:5000/exercises/update/' + id, exercise)
       .then(res => console.log(res.data));
 
     window.location = '/';
