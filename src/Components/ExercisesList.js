@@ -2,17 +2,6 @@ import React, { useState,useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 
-const Exercise = (props) => (
-  <tr>
-    <td>{props.exercise.username}</td>
-    <td>{props.exercise.description}</td>
-    <td>{props.exercise.duration}</td>
-    <td>{props.exercise.date.substring(0,10)}</td>
-    <td>
-      <Link to={"/edit/"+props.exercise._id}>edit</Link> | <a href="#" onClick={() => { props.deleteExercise(props.exercise._id) }}>delete</a>
-    </td>
-  </tr>
-)
 
 const ExercisesList = () => {
   const [exercises,setExercises]=useState([]);
@@ -26,19 +15,29 @@ const ExercisesList = () => {
       })
   }, [])
 
-  const deleteExercise = id => {
+  const deleteExercise =(id) => {
     axios.delete('http://localhost:5000/exercises/'+id)
       .then(response => { console.log(response.data)});
-
+  
     setExercises(exercises.filter(el => el._id !== id));
   }
-
+ 
   const exerciseList = () => {
     return exercises.map(currentexercise => {
       return <Exercise exercise={currentexercise} deleteExercise={deleteExercise} key={currentexercise._id}/>;
     })
   }
-
+  const Exercise = ({exercise}) => (
+    <tr>
+      <td>{exercise.username}</td>
+      <td>{exercise.description}</td>
+      <td>{exercise.duration}</td>
+      <td>{exercise.date.substring(0,10)}</td>
+      <td>
+        <Link to={"/update/"+exercise._id}>edit</Link> | <a href='#' onClick={() => { deleteExercise(exercise._id) }}>delete</a>
+      </td>
+    </tr>
+  )
 
   return (
     <div>
